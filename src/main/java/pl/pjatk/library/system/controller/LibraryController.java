@@ -1,5 +1,6 @@
 package pl.pjatk.library.system.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.pjatk.library.model.Book;
@@ -17,8 +18,16 @@ public class LibraryController {
     }
 
     @PostMapping("/book/add")
-    public ResponseEntity<Book> addBook(@RequestBody Book book) {
-        return ResponseEntity.ok(libraryService.addBook(book));
+    public ResponseEntity addBook(@RequestBody Book book) {
+        try {
+            return ResponseEntity.ok(libraryService.addBook(book));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
     }
 
+    @GetMapping("/book")
+    public ResponseEntity<List<Book>> getBooks(){
+        return ResponseEntity.ok(libraryService.getAllBooks());
+    }
 }
