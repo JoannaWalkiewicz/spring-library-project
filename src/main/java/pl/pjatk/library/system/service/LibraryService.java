@@ -1,7 +1,9 @@
 package pl.pjatk.library.system.service;
 
 import org.springframework.stereotype.Service;
+import pl.pjatk.library.model.Author;
 import pl.pjatk.library.model.Book;
+import pl.pjatk.library.system.repository.AuthorRepository;
 import pl.pjatk.library.system.repository.BookRepository;
 
 import java.util.List;
@@ -10,8 +12,10 @@ import java.util.List;
 @Service
 public class LibraryService {
     private BookRepository bookRepository;
+    private AuthorRepository authorRepository;
 
-    public LibraryService(BookRepository bookRepository ) {
+    public LibraryService(BookRepository bookRepository, AuthorRepository authorRepository ) {
+        this.authorRepository = authorRepository;
         this.bookRepository  = bookRepository;
     }
 
@@ -24,5 +28,9 @@ public class LibraryService {
 
     public List<Book> getAllBooks() {
         return this.bookRepository.findAll();
+    }
+
+    public Author addAuthor(Author author) {
+        return this.authorRepository.save(author);
     }
 }
