@@ -1,10 +1,15 @@
 package pl.pjatk.library.system.service;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import pl.pjatk.library.model.Author;
 import pl.pjatk.library.model.Book;
+import pl.pjatk.library.model.LibraryCard;
+import pl.pjatk.library.model.Reader;
 import pl.pjatk.library.system.repository.AuthorRepository;
 import pl.pjatk.library.system.repository.BookRepository;
+import pl.pjatk.library.system.repository.LibraryCardRepository;
+import pl.pjatk.library.system.repository.ReaderRepository;
 
 import java.util.List;
 
@@ -13,10 +18,15 @@ import java.util.List;
 public class LibraryService {
     private BookRepository bookRepository;
     private AuthorRepository authorRepository;
+    private LibraryCardRepository libraryCardRepository;
+    private ReaderRepository readerRepository;
 
-    public LibraryService(BookRepository bookRepository, AuthorRepository authorRepository ) {
+    public LibraryService(BookRepository bookRepository, AuthorRepository authorRepository, LibraryCardRepository libraryCardRepository, ReaderRepository readerRepository ) {
         this.authorRepository = authorRepository;
         this.bookRepository  = bookRepository;
+        this.libraryCardRepository = libraryCardRepository;
+        this.readerRepository = readerRepository;
+
     }
 
     public Book addBook(Book book) throws Exception {
@@ -33,4 +43,13 @@ public class LibraryService {
     public Author addAuthor(Author author) {
         return this.authorRepository.save(author);
     }
+
+    public LibraryCard addLibraryCard(LibraryCard libraryCard) {
+        return this.libraryCardRepository.save(libraryCard);
+    }
+    public Reader addReader(Reader reader) {
+        return this.readerRepository.save(reader);
+    }
+
+
 }

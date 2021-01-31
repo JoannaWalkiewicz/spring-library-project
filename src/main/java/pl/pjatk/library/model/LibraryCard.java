@@ -1,9 +1,6 @@
 package pl.pjatk.library.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
@@ -15,17 +12,20 @@ public class LibraryCard {
     private LocalDate validTo;
     private double balance;
     private EnCardStatus status;
+    @OneToOne(mappedBy = "libraryCard")
+    private Reader reader;
 
-    public LibraryCard(Long id, LocalDate validFrom, LocalDate validTo, double balance, EnCardStatus status) {
+    public LibraryCard() {
+
+    }
+
+    public LibraryCard(Long id, LocalDate validFrom, LocalDate validTo, double balance, EnCardStatus status, Reader reader) {
         this.id = id;
         this.validFrom = validFrom;
         this.validTo = validTo;
         this.balance = balance;
         this.status = status;
-    }
-
-    public LibraryCard() {
-
+        this.reader = reader;
     }
 
     public Long getId() {
@@ -66,5 +66,13 @@ public class LibraryCard {
 
     public void setStatus(EnCardStatus status) {
         this.status = status;
+    }
+
+    public Reader getReader() {
+        return reader;
+    }
+
+    public void setReader(Reader reader) {
+        this.reader = reader;
     }
 }

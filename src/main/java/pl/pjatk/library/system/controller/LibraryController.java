@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.pjatk.library.model.Author;
 import pl.pjatk.library.model.Book;
+import pl.pjatk.library.model.LibraryCard;
+import pl.pjatk.library.model.Reader;
 import pl.pjatk.library.system.service.LibraryService;
 
 import java.util.List;
@@ -40,6 +42,22 @@ public class LibraryController {
     public ResponseEntity getBooks(){
         try {
             return ResponseEntity.ok(ResponseEntity.ok(libraryService.getAllBooks()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
+    }
+    @PostMapping("/reader/add")
+    public ResponseEntity addReader(@RequestBody Reader reader) {
+        try {
+            return ResponseEntity.ok(libraryService.addReader(reader));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
+    }
+    @PostMapping("/libraryCard/add")
+    public ResponseEntity addLibraryCard(@RequestBody LibraryCard libraryCard) {
+        try {
+            return ResponseEntity.ok(libraryService.addLibraryCard(libraryCard));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         }

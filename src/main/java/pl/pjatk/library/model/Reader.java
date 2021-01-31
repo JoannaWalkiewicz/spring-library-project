@@ -1,9 +1,7 @@
 package pl.pjatk.library.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+
 @Entity
 public class Reader {
     @Id
@@ -13,17 +11,22 @@ public class Reader {
     private String surname;
     private String address;
     private String phoneNumber;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "library_card_id", referencedColumnName = "id")
+    private LibraryCard libraryCard;
 
-    public Reader(Long id, String name, String surname, String address, String phoneNumber) {
+
+    public Reader() {
+
+    }
+
+    public Reader(Long id, String name, String surname, String address, String phoneNumber, LibraryCard libraryCard) {
         this.id = id;
         this.name = name;
         this.surname = surname;
         this.address = address;
         this.phoneNumber = phoneNumber;
-    }
-
-    public Reader() {
-        
+        this.libraryCard = libraryCard;
     }
 
     public Long getId() {
@@ -64,5 +67,13 @@ public class Reader {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public LibraryCard getLibraryCard() {
+        return libraryCard;
+    }
+
+    public void setLibraryCard(LibraryCard libraryCard) {
+        this.libraryCard = libraryCard;
     }
 }
