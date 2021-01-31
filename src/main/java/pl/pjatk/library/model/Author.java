@@ -8,9 +8,23 @@ public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String name;
+    private String surname;
+    private String nickname;
+    @ManyToOne
+    @JoinColumn(name = "bookId")
+    private Book book;
 
     public Author() {
 
+    }
+
+    public Author(Long id, String name, String surname, String nickname, Book book) {
+        this.id = id;
+        this.name = name;
+        this.surname = surname;
+        this.nickname = nickname;
+        this.book = book;
     }
 
     public Long getId() {
@@ -51,21 +65,6 @@ public class Author {
     }
 
     public void setBook(Book book) {
-        this.book = book;
-    }
-
-    private String name;
-    private String surname;
-    private String nickname;
-    @ManyToOne
-    @JoinColumn(name = "bookId")
-    private Book book;
-
-    public Author(Long id, String name, String surname, String nickname, Book book) {
-        this.id = id;
-        this.name = name;
-        this.surname = surname;
-        this.nickname = nickname;
         this.book = book;
     }
 }
