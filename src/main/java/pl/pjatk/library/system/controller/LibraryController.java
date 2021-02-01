@@ -3,10 +3,7 @@ package pl.pjatk.library.system.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.pjatk.library.model.Author;
-import pl.pjatk.library.model.Book;
-import pl.pjatk.library.model.LibraryCard;
-import pl.pjatk.library.model.Reader;
+import pl.pjatk.library.model.*;
 import pl.pjatk.library.system.service.LibraryService;
 
 import java.util.List;
@@ -18,6 +15,15 @@ public class LibraryController {
 
     public LibraryController(LibraryService libraryService) {
         this.libraryService = libraryService;         //przypisanie referencji polom do tego obiektu; wstrzykiwanie zależności
+    }
+
+    @PostMapping("/book/borrow")
+    public ResponseEntity addBook(@RequestBody BorrowBookRequest borrowBookRequest) {
+        try {
+            return ResponseEntity.ok(libraryService.borrowBook(borrowBookRequest));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
     }
 
     @PostMapping("/book/add")
@@ -58,6 +64,14 @@ public class LibraryController {
     public ResponseEntity addLibraryCard(@RequestBody LibraryCard libraryCard) {
         try {
             return ResponseEntity.ok(libraryService.addLibraryCard(libraryCard));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
+    }
+    @PostMapping("/librarian/add")
+    public ResponseEntity addLibrarian(@RequestBody Librarian librarian) {
+        try {
+            return ResponseEntity.ok(libraryService.addLibrarian(librarian));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         }

@@ -11,7 +11,8 @@ public class Reader {
     private String surname;
     private String address;
     private String phoneNumber;
-    @OneToOne(cascade = CascadeType.ALL)
+
+    @OneToOne(cascade = CascadeType.MERGE, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "library_card_id", referencedColumnName = "id")
     private LibraryCard libraryCard;
 
@@ -69,11 +70,11 @@ public class Reader {
         this.phoneNumber = phoneNumber;
     }
 
-    public LibraryCard getLibraryCard() {
-        return libraryCard;
-    }
-
     public void setLibraryCard(LibraryCard libraryCard) {
         this.libraryCard = libraryCard;
+    }
+
+    public LibraryCard getLibraryCard() {
+        return libraryCard;
     }
 }
