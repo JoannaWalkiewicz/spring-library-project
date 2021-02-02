@@ -36,7 +36,6 @@ public class LibraryService {
         }
         return this.bookRepository.save(book);
     }
-
     public List<Book> getAllBooks() {
         return this.bookRepository.findAll();
     }
@@ -48,7 +47,11 @@ public class LibraryService {
     public LibraryCard addLibraryCard(LibraryCard libraryCard) {
         return this.libraryCardRepository.save(libraryCard);
     }
-    public Reader addReader(Reader reader) {
+
+    public Reader addReader(Reader reader) throws Exception {
+        if(this.readerRepository.existsByPesel(reader.getPesel())){
+            throw new Exception("Użytkownik o takim numerze pesel istnieje już w bazie");
+        }
         return this.readerRepository.save(reader);
     }
 

@@ -11,6 +11,7 @@ public class Reader {
     private String surname;
     private String address;
     private String phoneNumber;
+    private Long pesel;
 
     @OneToOne(cascade = CascadeType.MERGE, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "library_card_id", referencedColumnName = "id")
@@ -21,12 +22,13 @@ public class Reader {
 
     }
 
-    public Reader(Long id, String name, String surname, String address, String phoneNumber, LibraryCard libraryCard) {
+    public Reader(Long id, String name, String surname, String address, String phoneNumber,Long pesel, LibraryCard libraryCard ) {
         this.id = id;
         this.name = name;
         this.surname = surname;
         this.address = address;
         this.phoneNumber = phoneNumber;
+        this.pesel=pesel;
         this.libraryCard = libraryCard;
     }
 
@@ -70,11 +72,15 @@ public class Reader {
         this.phoneNumber = phoneNumber;
     }
 
+    public Long getPesel() {
+        return pesel;
+    }
+
+    public void setPesel(Long pesel) {this.pesel = pesel; }
+
     public void setLibraryCard(LibraryCard libraryCard) {
         this.libraryCard = libraryCard;
     }
 
-    public LibraryCard getLibraryCard() {
-        return libraryCard;
-    }
+    public LibraryCard getLibraryCard() { return libraryCard; }
 }
