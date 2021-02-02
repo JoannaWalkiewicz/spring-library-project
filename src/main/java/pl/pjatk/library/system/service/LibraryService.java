@@ -70,11 +70,13 @@ public class LibraryService {
             if (!date.isBefore(libraryCard.getValidFrom()) && (date.isBefore(libraryCard.getValidTo())))
             {
                 // check if book is available to borrow
-                // ...
-                this.borrowBookRepository.save(new BorrowBook(date, date.plusDays(7), bookOptional.get(), librarianOptional.get(), readerOptional.get()));
-
-                // update book status to InUse
-                // ...
+                if(bookOptional.get().getStatus() == EnBookStatus.Free) {
+                    this.borrowBookRepository.save(new BorrowBook(date, date.plusDays(7), bookOptional.get(), librarianOptional.get(), readerOptional.get()));
+                    // update book stats to InUse
+                    this.bookRepository.setBookStatus(EnBookStatus.InUse, bookOptional.get().getId());
+                } else {
+                    throw new Exception("Podana książka jest wypożyczona, nie można wypożyczyć");
+                }
 
                 return true;
             } else {
@@ -84,5 +86,6 @@ public class LibraryService {
         } else {
             throw new Exception("Błędne parametry wejściowe");
         }
+
     }
 }
