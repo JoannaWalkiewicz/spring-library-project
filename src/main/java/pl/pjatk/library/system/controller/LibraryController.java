@@ -14,7 +14,7 @@ public class LibraryController {
     private LibraryService libraryService;
 
     public LibraryController(LibraryService libraryService) {
-        this.libraryService = libraryService;         //przypisanie referencji polom do tego obiektu; wstrzykiwanie zależności
+        this.libraryService = libraryService;
     }
 
     @PostMapping("/book/borrow")

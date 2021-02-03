@@ -1,5 +1,6 @@
 package pl.pjatk.library.library.service;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -46,5 +47,30 @@ public class LibraryServiceTest {
         List<Book> all = libraryService.getAllBooks();
         //Then
         assertThat(all).isNotEmpty();
+    }
+    @Test
+    void addBookWithExistingReferenceIdShouldThrowException(){
+        //Given
+        ArrayList<Book> books = new ArrayList<>();
+        Book book = new Book(1L, "Book title", 2000, "A03", EnBookType.Romance, EnBookStatus.Free, new ArrayList<>());
+        books.add(book);
+        //When
+        when(bookRepository.existsBookByReferenceId(book.getReferenceId())).thenReturn(true);
+        //Then)
+        Assertions.assertThrows(Exception.class, () -> libraryService.addBook(book));
+    }
+
+    @Test
+    void addBookWithUniqueReferenceIdShouldAddBook() throws Exception {
+        //Given
+        ArrayList<Book> books = new ArrayList<>();
+        Book book = new Book(1L, "Book title", 2000, "A03", EnBookType.Romance, EnBookStatus.Free, new ArrayList<>());
+        books.add(book);
+        //When
+        when(bookRepository.save(book)).thenReturn(book);
+        when(bookRepository.existsBookByReferenceId(book.getReferenceId())).thenReturn(false);
+        //Then
+        Book addedBook = libraryService.addBook(book);
+        assertThat(addedBook).isNotNull();
     }
 }
