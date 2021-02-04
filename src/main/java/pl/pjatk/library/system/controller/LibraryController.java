@@ -26,6 +26,15 @@ public class LibraryController {
         }
     }
 
+    @PostMapping("/book/return")
+    public ResponseEntity returnBook(@RequestBody BorrowBookRequest borrowBookRequest) {
+        try {
+            return ResponseEntity.ok(libraryService.returnBook(borrowBookRequest));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
+    }
+
     @PostMapping("/book/add")
     public ResponseEntity addBook(@RequestBody Book book) {
         try {

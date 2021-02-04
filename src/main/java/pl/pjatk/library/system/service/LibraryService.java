@@ -7,6 +7,7 @@ import pl.pjatk.library.model.*;
 import pl.pjatk.library.system.repository.*;
 
 import javax.swing.text.html.Option;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +29,7 @@ public class LibraryService {
         this.readerRepository = readerRepository;
         this.librarianRepository = librarianRepository;
         this.borrowBookRepository = borrowBookRepository;
+
     }
 
     public Book addBook(Book book) throws Exception {
@@ -74,7 +76,7 @@ public class LibraryService {
             {
                 // check if book is available to borrow
                 if(bookOptional.get().getStatus() == EnBookStatus.Free) {
-                    this.borrowBookRepository.save(new BorrowBook(date, date.plusDays(7), bookOptional.get(), librarianOptional.get(), readerOptional.get()));
+                    this.borrowBookRepository.save(new BorrowBook(date, null, bookOptional.get(), librarianOptional.get(), readerOptional.get()));
                     // update book stats to InUse
                     this.bookRepository.setBookStatus(EnBookStatus.InUse, bookOptional.get().getId());
                 } else {
@@ -90,5 +92,32 @@ public class LibraryService {
             throw new Exception("Błędne parametry wejściowe");
         }
 
+    }
+
+    public boolean returnBook(BorrowBookRequest borrowBookRequest) throws Exception{
+        Optional<Reader> readerOptional = this.readerRepository.findById(borrowBookRequest.getReaderId());
+        Optional<Librarian> librarianOptional = this.librarianRepository.findById(borrowBookRequest.getLibrarianId());
+        Optional<Book> bookOptional = this.bookRepository.findById(borrowBookRequest.getBookId());
+        LocalDate dateOfReturn = LocalDate.now();
+        if (readerOptional.isPresent() && librarianOptional.isPresent() && bookOptional.isPresent()) {
+            BorrowBook borrowBook = this.borrowBookRepository.getBorrowBookByBookId(borrowBookRequest.getBookId());
+            long daysBetween = Duration.between(borrowBook.getDateOfBorrow().atStartOfDay(), dateOfReturn.atStartOfDay()).toDays();
+
+            // if book was returned after more than 7 days it should pay extra charge
+            if (daysBetween > 7) {
+                LibraryCard libraryCard = readerOptional.get().getLibraryCard();
+                Double actualBalance = libraryCard.getBalance();
+                this.libraryCardRepository.setBalanace(actualBalance - 10L, libraryCard.getId());
+            }
+            // update return date in borrow book repository
+            this.borrowBookRepository.setBorrowBookReturnDate(dateOfReturn, borrowBook.getId());
+
+            // update book stats to Free
+            this.bookRepository.setBookStatus(EnBookStatus.Free, bookOptional.get().getId());
+
+            return true;
+        } else {
+            throw new Exception("Błędne parametry wejściowe");
+        }
     }
 }
