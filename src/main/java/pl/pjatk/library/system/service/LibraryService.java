@@ -22,7 +22,8 @@ public class LibraryService {
     private ReaderRepository readerRepository;
     private BorrowBookRepository borrowBookRepository;
 
-    public LibraryService(BookRepository bookRepository, AuthorRepository authorRepository, LibraryCardRepository libraryCardRepository, ReaderRepository readerRepository, LibrarianRepository librarianRepository, BorrowBookRepository borrowBookRepository ) {
+
+    public LibraryService(BookRepository bookRepository, AuthorRepository authorRepository, LibraryCardRepository libraryCardRepository, ReaderRepository readerRepository, LibrarianRepository librarianRepository, BorrowBookRepository borrowBookRepository) {
         this.authorRepository = authorRepository;
         this.bookRepository  = bookRepository;
         this.libraryCardRepository = libraryCardRepository;
@@ -118,6 +119,16 @@ public class LibraryService {
             return true;
         } else {
             throw new Exception("Błędne parametry wejściowe");
+        }
+
+    }
+
+    public List<Book> findBookByTitle(String title) throws Exception {
+        List<Book> books = this.bookRepository.findByTitle(title);
+        if (!books.isEmpty()) {
+            return books;
+        } else {
+            throw new Exception("Nie ma takich książek o takim tytule");
         }
     }
 }

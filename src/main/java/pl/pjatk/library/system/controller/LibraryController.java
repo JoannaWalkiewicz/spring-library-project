@@ -85,4 +85,12 @@ public class LibraryController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         }
     }
+    @GetMapping("/book/find/{title}")
+    public ResponseEntity findBookByTitle(@PathVariable String title) {
+        try {
+            return ResponseEntity.ok(libraryService.findBookByTitle(title));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
+    }
 }

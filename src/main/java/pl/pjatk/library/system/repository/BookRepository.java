@@ -10,6 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.pjatk.library.model.Book;
 import pl.pjatk.library.model.EnBookStatus;
 
+import java.util.List;
+import java.util.Optional;
+
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
     @Query("select case when count(b)> 0 then true else false end from Book b where lower(b.referenceId) like lower(:referenceId)")
@@ -19,4 +22,10 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @Transactional
     @Query("update Book b set b.status = :status where b.id = :id")
     int setBookStatus(@Param("status") EnBookStatus status, @Param("id") Long id);
+
+    @Query("select b FROM Book b where b.title = :title")
+    public List<Book> findByTitle(@Param("title") String title);
 }
+
+
+
