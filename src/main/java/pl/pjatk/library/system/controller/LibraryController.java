@@ -12,13 +12,12 @@ import java.util.List;
 @RequestMapping("/library")
 public class LibraryController {
     private LibraryService libraryService;
-
     public LibraryController(LibraryService libraryService) {
         this.libraryService = libraryService;
     }
 
     @PostMapping("/book/borrow")
-    public ResponseEntity addBook(@RequestBody BorrowBookRequest borrowBookRequest) {
+    public ResponseEntity borrowBook(@RequestBody BorrowBookRequest borrowBookRequest) {
         try {
             return ResponseEntity.ok(libraryService.borrowBook(borrowBookRequest));
         } catch (Exception e) {

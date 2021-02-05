@@ -76,7 +76,8 @@ public class LibraryService {
             if (!date.isBefore(libraryCard.getValidFrom()) && (date.isBefore(libraryCard.getValidTo())))
             {
                 // check if book is available to borrow
-                if(bookOptional.get().getStatus() == EnBookStatus.Free) {
+                Book book = bookOptional.get();
+                if(book.getStatus() == EnBookStatus.Free) {
                     this.borrowBookRepository.save(new BorrowBook(date, null, bookOptional.get(), librarianOptional.get(), readerOptional.get()));
                     // update book stats to InUse
                     this.bookRepository.setBookStatus(EnBookStatus.InUse, bookOptional.get().getId());
@@ -106,14 +107,16 @@ public class LibraryService {
 
             // if book was returned after more than 7 days it should pay extra charge
             if (daysBetween > 7) {
-                LibraryCard libraryCard = readerOptional.get().getLibraryCard();
+                Reader reader = readerOptional.get();
+                LibraryCard libraryCard = reader.getLibraryCard();
+                // get actual balance
                 Double actualBalance = libraryCard.getBalance();
                 this.libraryCardRepository.setBalanace(actualBalance - 10L, libraryCard.getId());
             }
             // update return date in borrow book repository
             this.borrowBookRepository.setBorrowBookReturnDate(dateOfReturn, borrowBook.getId());
 
-            // update book stats to Free
+            // update book status to Free
             this.bookRepository.setBookStatus(EnBookStatus.Free, bookOptional.get().getId());
 
             return true;
