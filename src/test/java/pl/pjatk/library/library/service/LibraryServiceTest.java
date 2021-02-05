@@ -6,10 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import pl.pjatk.library.model.Author;
-import pl.pjatk.library.model.Book;
-import pl.pjatk.library.model.EnBookStatus;
-import pl.pjatk.library.model.EnBookType;
+import pl.pjatk.library.model.*;
 import pl.pjatk.library.system.repository.*;
 import pl.pjatk.library.system.service.LibraryService;
 
@@ -44,9 +41,9 @@ public class LibraryServiceTest {
         books.add(book);
         when(bookRepository.findAll()).thenReturn(books);
         //When
-        List<Book> all = libraryService.getAllBooks();
+        Response<List<Book>> all = libraryService.getAllBooks();
         //Then
-        assertThat(all).isNotEmpty();
+        assertThat(all.getResult()).isNotEmpty();
     }
     @Test
     void addBookWithExistingReferenceIdShouldThrowException(){
@@ -70,7 +67,7 @@ public class LibraryServiceTest {
         when(bookRepository.save(book)).thenReturn(book);
         when(bookRepository.existsBookByReferenceId(book.getReferenceId())).thenReturn(false);
         //Then
-        Book addedBook = libraryService.addBook(book);
+        Response<Book> addedBook = libraryService.addBook(book);
         assertThat(addedBook).isNotNull();
     }
 }

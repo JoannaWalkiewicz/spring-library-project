@@ -33,36 +33,37 @@ public class LibraryService {
 
     }
 
-    public Book addBook(Book book) throws Exception {
+    public Response<Book> addBook(Book book) {
         if(this.bookRepository.existsBookByReferenceId(book.getReferenceId())){
-            throw new Exception("Nie można dodać książki ponieważ istnieje już w bazie");
+            return new Response<>("Nie można dodać książki ponieważ istnieje już w bazie", null);
         }
-        return this.bookRepository.save(book);
-    }
-    public List<Book> getAllBooks() {
-        return this.bookRepository.findAll();
+        return new Response<>(null, this.bookRepository.save(book));
     }
 
-    public Author addAuthor(Author author) {
-        return this.authorRepository.save(author);
+    public Response<List<Book>> getAllBooks() {
+        return new Response<>(null, this.bookRepository.findAll());
     }
 
-    public LibraryCard addLibraryCard(LibraryCard libraryCard) {
-        return this.libraryCardRepository.save(libraryCard);
+    public Response<Author> addAuthor(Author author) {
+        return new Response<>(null, this.authorRepository.save(author));
     }
 
-    public Reader addReader(Reader reader) throws Exception {
+    public Response<LibraryCard> addLibraryCard(LibraryCard libraryCard) {
+        return new Response<>(null, this.libraryCardRepository.save(libraryCard));
+    }
+
+    public Response<Reader> addReader(Reader reader) {
         if(this.readerRepository.existsByPesel(reader.getPesel())){
-            throw new Exception("Użytkownik o takim numerze pesel istnieje już w bazie");
+            return new Response<>("Użytkownik o takim numerze pesel istnieje już w bazie", null);
         }
-        return this.readerRepository.save(reader);
+        return new Response<>(null, this.readerRepository.save(reader));
     }
 
-    public Librarian addLibrarian(Librarian librarian) {
-        return this.librarianRepository.save(librarian);
+    public Response<Librarian> addLibrarian(Librarian librarian) {
+        return  new Response<>(null, this.librarianRepository.save(librarian));
     }
 
-    public boolean borrowBook(BorrowBookRequest borrowBookRequest) throws Exception {
+    public Response<Boolean> borrowBook(BorrowBookRequest borrowBookRequest) {
         Optional<Reader> readerOptional = this.readerRepository.findById(borrowBookRequest.getReaderId());
         Optional<Librarian> librarianOptional = this.librarianRepository.findById(borrowBookRequest.getLibrarianId());
         Optional<Book> bookOptional = this.bookRepository.findById(borrowBookRequest.getBookId());
@@ -82,21 +83,21 @@ public class LibraryService {
                     // update book stats to InUse
                     this.bookRepository.setBookStatus(EnBookStatus.InUse, bookOptional.get().getId());
                 } else {
-                    throw new Exception("Podana książka jest wypożyczona, nie można wypożyczyć");
+                    return new Response<>("Podana książka jest wypożyczona, nie można wypożyczyć", null);
+
                 }
 
-                return true;
+                return new Response<>(null, true);
             } else {
-                throw new Exception("Użytkownik nie może wypożyczyć książki ponieważ nie ma ważnej karty bibliotecznej");
+                return new Response<>("Użytkownik nie może wypożyczyć książki ponieważ nie ma ważnej karty bibliotecznej", null);
             }
 
         } else {
-            throw new Exception("Błędne parametry wejściowe");
+            return new Response<>("Błędne parametry wejściowe", null);
         }
-
     }
 
-    public boolean returnBook(BorrowBookRequest borrowBookRequest) throws Exception{
+    public Response<Boolean> returnBook(BorrowBookRequest borrowBookRequest) {
         Optional<Reader> readerOptional = this.readerRepository.findById(borrowBookRequest.getReaderId());
         Optional<Librarian> librarianOptional = this.librarianRepository.findById(borrowBookRequest.getLibrarianId());
         Optional<Book> bookOptional = this.bookRepository.findById(borrowBookRequest.getBookId());
@@ -119,19 +120,19 @@ public class LibraryService {
             // update book status to Free
             this.bookRepository.setBookStatus(EnBookStatus.Free, bookOptional.get().getId());
 
-            return true;
+            return new Response<>(null, true);
         } else {
-            throw new Exception("Błędne parametry wejściowe");
+            return new Response<>("Błędne parametry wejściowe", null);
         }
 
     }
 
-    public List<Book> findBookByTitle(String title) throws Exception {
+    public Response<List<Book>> findBookByTitle(String title) {
         List<Book> books = this.bookRepository.findByTitle(title);
         if (!books.isEmpty()) {
-            return books;
+            return new Response<>(null, books);
         } else {
-            throw new Exception("Nie ma takich książek o takim tytule");
+            return new Response<>("Nie ma takich książek o takim tytule", null);
         }
     }
 }

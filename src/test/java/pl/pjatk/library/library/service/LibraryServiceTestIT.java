@@ -17,21 +17,21 @@ public class LibraryServiceTestIT {
 
     @Test
     void shoudReturnAllBooksTest(){
-        List<Book> all = libraryService.getAllBooks();
-        assertThat(all).isEmpty();
+        Response<List<Book>> all = libraryService.getAllBooks();
+        assertThat(all.getResult()).isEmpty();
     }
     @Test
     void shouldAddLibrarianToDatabaseTest() {
         Librarian librarian = new Librarian(1L, "Name", "Surname");
-        Librarian savedLibrarian = libraryService.addLibrarian(librarian);
-        assertThat(savedLibrarian.getId()).isNotNull();
+        Response<Librarian> response = libraryService.addLibrarian(librarian);
+        assertThat(response.getResult().getId()).isNotNull();
     }
     @Test
     void shouldFindBookByTitle() throws Exception {
         String title = "testowy";
         Book book = new Book(1L, title, 1991,"A03", EnBookType.Fantasy, EnBookStatus.Free, null);
-        Book addedBook = libraryService.addBook(book);
-        List<Book> books = libraryService.findBookByTitle(title);
-        assertThat(books).isNotEmpty();
+        Response<Book> addedBook = libraryService.addBook(book);
+        Response<List<Book>> books = libraryService.findBookByTitle(title);
+        assertThat(books.getResult()).isNotEmpty();
     }
 }
